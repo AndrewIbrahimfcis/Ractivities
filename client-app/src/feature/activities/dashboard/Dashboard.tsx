@@ -15,16 +15,18 @@ interface props {
     closeform:()=>void;
     creatoredit:(activity:Activity)=>void;
     deleteactivity:(id:string)=>void;
+    submetting:boolean;
 }
 
 export default function Dashboard({ activities, selectedactivity, selectActivity, CancelActivity, editmode,
-openform, closeform, creatoredit, deleteactivity}: props) {
+openform, closeform, creatoredit, deleteactivity,submetting}: props) {
     return (
         <Grid>
             <Grid.Column width='10' >
                 <Activitylist activities={activities}
                  selectActivity = {selectActivity} 
                  deleteactivity = {deleteactivity}
+                 submetting ={submetting}
                 />
             </Grid.Column>
             <Grid.Column width='6' >
@@ -35,7 +37,12 @@ openform, closeform, creatoredit, deleteactivity}: props) {
                     openform = {openform}
                 />}
                 {editmode &&
-                <Activityform closeform = {closeform} activity = {selectedactivity} creatoredit={creatoredit} />}
+                <Activityform
+                closeform = {closeform}
+                activity = {selectedactivity} 
+                creatoredit={creatoredit} 
+                submetting = {submetting}
+                />}
 
             </Grid.Column>
 

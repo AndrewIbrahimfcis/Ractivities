@@ -6,8 +6,9 @@ interface props {
     activity: Activity | undefined;
     closeform:()=>void;
     creatoredit:(activity:Activity)=>void;
+    submetting :boolean;
 }
-export default function Activityform({closeform, activity:selectedactivity,creatoredit}:props){
+export default function Activityform({closeform, activity:selectedactivity,creatoredit,submetting}:props){
     const intialState = selectedactivity ??{
         id: '',
         title:'',
@@ -31,10 +32,10 @@ export default function Activityform({closeform, activity:selectedactivity,creat
                 <Form.Input placeholder = 'Tittle' value = {activity.title} name='title' onChange={inputchange}/>
                 <Form.Input placeholder = 'Description'value = {activity.description} name='description' onChange={inputchange}/>
                 <Form.Input placeholder = 'Category'value = {activity.category} name='category' onChange={inputchange}/>
-                <Form.Input placeholder = 'Date'value = {activity.date} name='date' onChange={inputchange}/>
+                <Form.Input type ='Date' placeholder = 'Date'value = {activity.date} name='date' onChange={inputchange}/>
                 <Form.Input placeholder = 'City'value = {activity.city} name='city' onChange={inputchange}/>
                 <Form.Input placeholder = 'Aveneu'value = {activity.enue} name='enue' onChange={inputchange}/>
-                <Button floated = 'right' positive type = 'Submit' content='Submit'/>
+                <Button loading = {submetting} floated = 'right' positive type = 'Submit' content='Submit'/>
                 <Button onClick = {closeform} floated = 'right'  type = 'button' content='Cancel'/>
             </Form>
         </Segment>
