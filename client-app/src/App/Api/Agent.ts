@@ -12,7 +12,7 @@ axios.interceptors.response.use(async Response => {
         await sleep(1000);
         return Response;
     } catch (error) {
-        console.log(error);
+    //    console.log(error);
         return await Promise.reject(error);
     }
 })
