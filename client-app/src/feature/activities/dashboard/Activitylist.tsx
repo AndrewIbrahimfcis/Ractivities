@@ -1,5 +1,6 @@
 import React, { SyntheticEvent } from "react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button, Item, Label, Segment } from "semantic-ui-react";
 import { useStore } from "../../../App/Stores/Store";
 
@@ -24,7 +25,7 @@ export default function Activitylist() {
                                 <div>{activity.enue}</div>
                             </Item.Description>
                             <Item.Extra>
-                                <Button onClick={() => ActivityStore.selectActivity(activity.id)} floated='right' content='View' color='blue'></Button>
+                                <Button as ={Link} to ={`/activities/${activity.id}`} floated='right' content='View' color='blue'></Button>
                                 <Button
                                     name={activity.id}
                                     loading={loading && target === activity.id}

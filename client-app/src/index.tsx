@@ -5,10 +5,12 @@ import './App/Layout/Style.css';
 import App from './App/Layout/App';
 import reportWebVitals from './reportWebVitals';
 import { store, StoreContext } from './App/Stores/Store';
-
+import { BrowserRouter } from 'react-router-dom'
 ReactDOM.render(
   <StoreContext.Provider value={store}>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </StoreContext.Provider>,
   document.getElementById('root')
 );

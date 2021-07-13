@@ -1,11 +1,11 @@
 import { makeAutoObservable, runInAction } from "mobx"
 import agent from "../Api/Agent"
 import { Activity } from "../Models/Activity"
-import { v4 as uuid } from 'uuid';
+
 
 export default class ActivityStore {
     //activities: Activity[] = []
-    activityRegester = new Map<string,Activity>();
+    activityRegester = new Map<string, Activity>();
     selectedActivity: Activity | undefined = undefined
     editMode = false
     loading = false
@@ -14,14 +14,15 @@ export default class ActivityStore {
     constructor() {
         makeAutoObservable(this)
     }
-    get activitybydate(){
-        return Array.from(this.activityRegester.values()).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));    }
+    get activitybydate() {
+        return Array.from(this.activityRegester.values()).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+    }
     loadActivities = async () => {
+        this.setloadingInitial(true);
         try {
             const activities = await agent.activities.list();
             activities.forEach(activity => {
-                activity.date = activity.date.split('T')[0];
-                this.activityRegester.set(activity.id,activity);
+                this.setActivity(activity);
             })
             this.setloadingInitial(false)
         }
@@ -30,29 +31,47 @@ export default class ActivityStore {
             this.setloadingInitial(false)
         }
     }
+
+    loadActivity = async (id: string)=>{
+        let activity = this.getactivity(id);
+        if (activity) {
+            this.selectedActivity = activity;
+            return activity;
+        }
+        else {
+            this.loadingInitial = true;
+            try {
+                activity = await agent.activities.details(id);
+                this.setActivity(activity);
+                this.selectedActivity=activity;
+                this.setloadingInitial(false);
+                return activity;
+            }
+            catch (error) {
+                console.log(error)
+                this.setloadingInitial(false);
+            }
+        }
+    }
+    private setActivity = (activity: Activity) => {
+        activity.date = activity.date.split('T')[0];
+        this.activityRegester.set(activity.id, activity);
+    }
+
+    private getactivity = (id: string) => {
+        return this.activityRegester.get(id);
+    }
+
     setloadingInitial = (state: boolean) => {
         this.loadingInitial = state;
     }
-    selectActivity = (id: string) => {
-        this.selectedActivity = this.activityRegester.get(id);
-    }
-    cancelActivity = () => {
-        this.selectedActivity = undefined;
-    }
-    openAcvtivity = (id?: string) => {
-        id ? this.selectActivity(id) : this.cancelActivity()
-        this.editMode = true
-    }
-    closeActivity = () => {
-        this.editMode = false
-    }
+    
     createActivity = async (activity: Activity) => {
         this.loading = true;
-        activity.id = uuid();
         try {
             await agent.activities.create(activity)
             runInAction(() => {
-                this.activityRegester.set(activity.id,activity);
+                this.activityRegester.set(activity.id, activity);
                 this.selectedActivity = activity;
                 this.editMode = false;
                 this.loading = true;
@@ -70,7 +89,7 @@ export default class ActivityStore {
         try {
             await agent.activities.update(activity)
             runInAction(() => {
-                this.activityRegester.set(activity.id,activity);
+                this.activityRegester.set(activity.id, activity);
                 this.selectedActivity = activity;
                 this.editMode = false;
                 this.loading = false;
@@ -89,7 +108,6 @@ export default class ActivityStore {
             await agent.activities.delete(id);
             runInAction(() => {
                 this.activityRegester.delete(id);
-                if (this.selectedActivity?.id === id)  this.cancelActivity() ;
                 this.loading = false;
             })
 
