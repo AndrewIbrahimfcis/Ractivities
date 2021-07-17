@@ -11,7 +11,7 @@ export default function Homepage() {
                 </Header>
                 <Header as ="h2" inverted content='Welcome to Reactivities'/>
                 <Button as = {Link} to ='/activities' size = 'huge' inverted>
-                    Take me ti Activities!
+                    Take me to Activities!
                 </Button>
             </Container>
         </Segment>

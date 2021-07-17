@@ -83,13 +83,13 @@ export default class ActivityStore {
                 this.activityRegester.set(activity.id, activity);
                 this.selectedActivity = activity;
                 this.editMode = false;
-                this.loading = true;
+                this.loading = false;
             })
         }
         catch (error) {
             console.log(error)
             runInAction(() => {
-                this.loading = true;
+                this.loading = false;
             })
         }
     }
